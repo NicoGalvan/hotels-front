@@ -14,7 +14,6 @@
   import Modal from '@/components/base/Modal.vue'; 
   import HotelForm from './HotelForm.vue';
   
-  // Props para el modal y el formulario
   const props = defineProps({
     isOpen: {
       type: Boolean,

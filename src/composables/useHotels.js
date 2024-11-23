@@ -1,33 +1,37 @@
 import { storeToRefs } from "pinia";
-import Swal from 'sweetalert2'
 import { useHotelStore } from "../stores/hotelStore";
-import { computed } from "vue";
 
 export const useHotels = () => {
   const hotelStore = useHotelStore();
-  const {
-    pagination,
-    isLoading,
-    error,
-    modal,
-    hotels,
-    cities,
-  } = storeToRefs(hotelStore);
+  const { pagination, isLoading, error, modal, hotels, cities } =
+    storeToRefs(hotelStore);
 
   const getHotels = async (filters = {}) => {
     hotelStore.loadHotels(filters);
   };
-  
+
   const getcities = async () => {
     hotelStore.loadCities();
   };
 
-  const openModal = () => {
+  const openHotelFormModal = () => {
     hotelStore.toggleModal(true);
   };
-  
-  const closeModal = () => {
+
+  const closeHotelFormModal = () => {
     hotelStore.toggleModal(false);
+  };
+
+  const saveNewHotel = async (hotel) => {
+    await hotelStore.createHotel(hotel);
+  };
+
+  const saveEditedHotel = async (hotel, id) => {
+    await hotelStore.editHotel(hotel, id);
+  };
+
+  const deleteHotel = async (id) => {
+    await hotelStore.removeHotel(id);
   };
 
   return {
@@ -42,5 +46,10 @@ export const useHotels = () => {
     //methods
     getHotels,
     getcities,
+    openHotelFormModal,
+    closeHotelFormModal,
+    saveNewHotel,
+    saveEditedHotel,
+    deleteHotel
   };
 };
