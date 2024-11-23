@@ -2,7 +2,7 @@
     <Card class="border border-gray-300">
       <template #header>
         <div class="bg-gray-200 text-gray-800 p-3 flex justify-between items-center">
-          <h2 class="text-lg font-semibold truncate">{{ hotel.name }}</h2>
+          <h2 class="text-lg font-semibold truncate" :title="hotel.name">{{ hotel.name }}</h2>
           <div class="flex space-x-2">
             <!-- Botón de habitaciones -->
             <button

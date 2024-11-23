@@ -3,15 +3,18 @@ import { useHotelStore } from "../stores/hotelStore";
 
 export const useHotels = () => {
   const hotelStore = useHotelStore();
-  const { pagination, isLoading, error, modal, hotels, cities } =
+  const { pagination, isLoading, error, modal, hotels, cities, roomTypes } =
     storeToRefs(hotelStore);
 
   const getHotels = async (filters = {}) => {
     hotelStore.loadHotels(filters);
   };
 
-  const getcities = async () => {
+  const getCities = async () => {
     hotelStore.loadCities();
+  };
+  const getRoomTypes = async () => {
+    hotelStore.loadRoomTypes();
   };
 
   const openHotelFormModal = () => {
@@ -26,12 +29,24 @@ export const useHotels = () => {
     await hotelStore.createHotel(hotel);
   };
 
+  const saveNewRoom = async (room) => {
+    await hotelStore.createRoom(room);
+  };
+
   const saveEditedHotel = async (hotel, id) => {
     await hotelStore.editHotel(hotel, id);
   };
 
   const deleteHotel = async (id) => {
     await hotelStore.removeHotel(id);
+  };
+
+  const deleteRoom = async (id) => {
+    await hotelStore.removeRoom(id);
+  };
+
+  const saveEditedRoom = async (room, id) => {
+    await hotelStore.editRoom(room, id);
   };
 
   return {
@@ -42,14 +57,19 @@ export const useHotels = () => {
     modal,
     hotels,
     cities,
+    roomTypes,
 
     //methods
     getHotels,
-    getcities,
+    getCities,
     openHotelFormModal,
     closeHotelFormModal,
     saveNewHotel,
     saveEditedHotel,
-    deleteHotel
+    deleteHotel,
+    getRoomTypes,
+    saveNewRoom,
+    deleteRoom,
+    saveEditedRoom,
   };
 };

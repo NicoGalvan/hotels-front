@@ -9,7 +9,7 @@
         <div v-show="hotels.length === 0 && !isLoading" class="text-center text-gray-500 py-10">
             No se encontraron hoteles.
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] lg:max-h-[80vh] overflow-auto">
             <HotelCard v-for="hotel in hotels" :key="hotel.id" :hotel="hotel" @edit="openModal('edit', hotel)"
                 @delete="handleDelete(hotel)" @manage-rooms="handleManageRooms(hotel)" />
         </div>
@@ -18,6 +18,9 @@
 
         <HotelModal :isOpen="modal" :hotel="selectedHotel" :cities="cities" @close="closeModal"
             @submit="handleHotelSubmit" />
+
+        <ManageRoomsModal v-if="isManageRoomsModalOpen" :isOpen="isManageRoomsModalOpen" :hotel="selectedHotel"
+            @close="closeManageRoomsModal" />
     </div>
 </template>
 
@@ -28,14 +31,17 @@ import SearchAndFilter from "@/components/base/SearchAndFilter.vue";
 import HotelCard from "@/components/HotelsPage/HotelCard.vue";
 import HotelModal from "@/components/HotelsPage/HotelModal.vue";
 import Pagination from "@/components/base/Pagination.vue";
+import ManageRoomsModal from "@/components/HotelsPage/Accommodations/ManageRoomsModal.vue";
 import Swal from "sweetalert2";
 
-const { getHotels, getcities, hotels, cities, pagination, isLoading, modal, openHotelFormModal, closeHotelFormModal, saveNewHotel, saveEditedHotel, deleteHotel } = useHotels();
+const { getHotels, getCities, hotels, cities, pagination, isLoading, modal, openHotelFormModal, closeHotelFormModal, saveNewHotel, saveEditedHotel, deleteHotel, roomTypes, getRoomTypes } = useHotels();
 
 const searchQuery = ref("");
 const selectedCity = ref("");
 const selectedHotel = ref(null);
 const modalType = ref("create");
+const isManageRoomsModalOpen = ref(false);
+
 
 const openModal = (type, hotel = null) => {
     modalType.value = type;
@@ -62,7 +68,7 @@ const handleHotelSubmit = async (hotelData) => {
 };
 
 const handleManageRooms = (hotel) => {
-    alert(`Gestionar habitaciones para: ${hotel.name}`);
+    openManageRoomsModal(hotel)
 };
 
 const fetchHotels = async (page = 1) => {
@@ -80,7 +86,7 @@ const changeCity = (city) => {
 
 const handleDelete = async (hotel) => {
     Swal.fire({
-        title: `¿Está seguro de eliminar el hotel "${hotel.name }" ?`,
+        title: `¿Está seguro de eliminar el hotel "${hotel.name}" ?`,
         showCancelButton: true,
         confirmButtonText: "Eliminar",
     }).then(async (result) => {
@@ -91,8 +97,18 @@ const handleDelete = async (hotel) => {
     });
 };
 
+const openManageRoomsModal = (hotel) => {
+  selectedHotel.value = hotel;
+  isManageRoomsModalOpen.value = true;
+};
+
+const closeManageRoomsModal = () => {
+  isManageRoomsModalOpen.value = false;
+};
+
 onMounted(() => {
-    if (!cities.value.length) getcities();
+    if (!cities.value.length) getCities();
+    if (!roomTypes.value.length) getRoomTypes();
     fetchHotels();
 });
 </script>

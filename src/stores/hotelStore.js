@@ -9,6 +9,13 @@ import {
   deleteHotelApi,
 } from "@/services/hotelService";
 
+import {
+  getRoomTypesApi,
+  postRoomsApi,
+  deleteRoomApi,
+  putRoomsApi,
+} from "@/services/accommodationService";
+
 export const useHotelStore = defineStore("hotelStore", () => {
   const pagination = ref({});
   const isLoading = ref(false);
@@ -16,6 +23,7 @@ export const useHotelStore = defineStore("hotelStore", () => {
   const modal = ref(false);
   const hotels = ref([]);
   const cities = ref([]);
+  const roomTypes = ref([]);
 
   const loadCities = async () => {
     try {
@@ -24,6 +32,16 @@ export const useHotelStore = defineStore("hotelStore", () => {
     } catch (err) {
       error.value = err.message;
       console.error("Error loading cities:", err);
+    }
+  };
+
+  const loadRoomTypes = async () => {
+    try {
+      const response = await getRoomTypesApi();
+      roomTypes.value = response.data;
+    } catch (err) {
+      error.value = err.message;
+      console.error("Error loading room types:", err);
     }
   };
 
@@ -120,6 +138,90 @@ export const useHotelStore = defineStore("hotelStore", () => {
     }
   };
 
+  const createRoom = async (room) => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const response = await postRoomsApi(room);
+      const roomResponse = response.data.data;
+      delete roomResponse.hotel;
+      hotels.value
+        .find((hotel) => hotel.id == roomResponse.hotel_id)
+        .rooms.push(roomResponse);
+      Swal.fire({
+        title: "habitacion guardada",
+        text: response.data.message,
+        icon: "success",
+      });
+    } catch (err) {
+      error.value = err.message;
+      console.error("Error updating room:", err);
+      Swal.fire({
+        icon: "error",
+        title: "error",
+        text: err.response.data.message,
+      });
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const removeRoom = async (id) => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const response = await deleteRoomApi(id);
+      Swal.fire({
+        title: "Habitación eliminada",
+        text: response.data.message,
+        icon: "success",
+      });
+    } catch (err) {
+      error.value = err.message;
+      console.error("Error deleting room:", err);
+      Swal.fire({
+        icon: "error",
+        title: "error",
+        text: "Ocurrió un error inesperado, inténtelo nuevamente!",
+      });
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const editRoom = async (room, id) => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const response = await putRoomsApi(room, id);
+
+      const roomResponse = response.data.data;
+      delete roomResponse.hotel;
+
+      const hotelSel = hotels.value
+      .find((hotel) => hotel.id == roomResponse.hotel_id)
+
+      const index = hotelSel.rooms.findIndex(r => r.id === room.id);
+      if (index !== -1) hotelSel.rooms[index] = roomResponse;
+
+      Swal.fire({
+        title: "Habitación actualizada",
+        text: response.data.message,
+        icon: "success",
+      });
+    } catch (err) {
+      error.value = err.message;
+      console.error("Error updating room:", err);
+      Swal.fire({
+        icon: "error",
+        title: "error",
+        text: err.response.data.message,
+      });
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     //data
     pagination,
@@ -128,6 +230,7 @@ export const useHotelStore = defineStore("hotelStore", () => {
     modal,
     hotels,
     cities,
+    roomTypes,
 
     //methods
     loadHotels,
@@ -136,5 +239,9 @@ export const useHotelStore = defineStore("hotelStore", () => {
     createHotel,
     editHotel,
     removeHotel,
+    loadRoomTypes,
+    createRoom,
+    removeRoom,
+    editRoom,
   };
 });
