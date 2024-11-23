@@ -1,15 +1,25 @@
-# Products List - Vue 3 + Vite
+# **Hotels-front - Vue 3 + Vite**
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/016ae7e9-4683-4f97-9539-37a347947432/deploy-status)](https://app.netlify.com/sites/nicolas-soft/deploys)
 
-deploy: https://nicolas-soft.netlify.app
+**Demo en línea:** [https://nicolas-soft.netlify.app](https://nicolas-soft.netlify.app)
 
-Este es un proyecto desarrollado con **Vue 3** y **Vite** para gestionar hoteles, tipos de habitaciones, acomodaciones y más. Sigue los pasos a continuación para clonar, instalar dependencias y ejecutar el proyecto localmente.
+Este proyecto es una aplicación para gestionar **hoteles**, **tipos de habitaciones**, **acomodaciones**, y más, desarrollado con **Vue 3**, **Vite**, y **Tailwind CSS**.
 
---- 
+---
 
-## Backend
+## **📚 Descripción**
 
-Este proyecto se conecta a una API que se encuentra en el siguiente repositorio: https://github.com/NicoGalvan/hotels-api/tree/main Se recomienda ir y leer el README en caso de que se quiera trabajar con la API de manera local. De lo contrario, si se quiere trabajar con la API desplegada en línea, asegúrate de que el archivo axiosInstance apunte a la dirección https://hotels-api-production.up.railway.app/api/ de esta manera.
+El proyecto permite gestionar entidades relacionadas con hoteles mediante una interfaz web rápida y moderna. Utiliza una API RESTful externa para las operaciones de backend. La aplicación está optimizada para un rendimiento rápido y una experiencia de usuario intuitiva.
+
+---
+
+## **🔗 Backend**
+
+La aplicación se conecta a una API que puedes encontrar en el siguiente repositorio:  
+[https://github.com/NicoGalvan/hotels-api/tree/main](https://github.com/NicoGalvan/hotels-api/tree/main)  
+
+Puedes trabajar con la API en modo local siguiendo las instrucciones de su README, o utilizar la versión en línea configurando `axiosInstance` como se muestra a continuación:
 
 ```js
 //src\services\axiosInstance.js
